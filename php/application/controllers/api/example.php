@@ -77,8 +77,6 @@ class Example extends REST_Controller
         $userId = $this->input->post('user_id');
         $user = $this->users_model->checkUserId($userId);
 
-        echo $user;
-
         /*
         $message = array(
                             'id' => $this->get('id'), 
