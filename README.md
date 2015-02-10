@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CodeIgniter on OpenShift #
 
 The easiest way to install this application is to use the [OpenShift Instant Application](https://openshift.redhat.com/app/console/application_type/quickstart!14232). 
@@ -101,3 +102,7 @@ for more details on using [multiple CodeIgniter development environments](http:/
     **Note:** This QuickStart was configured for MySQL
 
 1. That's it! Enjoy your new CodeIgniter application!
+=======
+# MyCIRest
+Codeigniter rest server base on rh
+>>>>>>> db02795b968e96a87cbe811dbcb2c964e27ba99f
