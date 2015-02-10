@@ -24,7 +24,6 @@
 		{   
 			$this->db->set('isim', $isim); 
             $query = $this->db->insert('test');
-			echo $query;
 			if ($query) {
 				return true;
 			} else {
