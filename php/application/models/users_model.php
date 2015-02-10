@@ -11,7 +11,6 @@
 		function registerUser($user,$user_meta)
 
 		{
-			
 			//insert register
 			$user_insert = array(
 
@@ -23,7 +22,7 @@
 				"last_login" => time(),
 				"state"=> '1'
 				);
-			
+
 			$query = $this->db->insert('users',$user_insert);
 			$user_id = $this->db->insert_id();			
 
@@ -47,7 +46,6 @@
 				
 				$query = $this->db->insert('meta',$insert);
 				
-				//return $this->checkUser($user['email']);
 				return true;
 			}
 
