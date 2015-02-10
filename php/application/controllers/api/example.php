@@ -43,6 +43,55 @@ class Example extends REST_Controller
                                 'sonuc' => $sonuc), 200);
         
     }
+
+    function registerUser_post()
+    {
+        $user_inf = array(
+                        'email' => $this->input->post('email'), 
+                        'password' => $this->input->post('password'));
+
+        $user_meta_inf = array(
+                                'firstname' => $this->input->post('firstname'),
+                                'lastname' => $this->input->post('lastname'),
+                                'mobilenumber' => $this->input->post('mobilenumber') );
+
+        $return = $this->users_model->registerUser($user_inf,$user_meta_inf);
+
+        echo $return;
+
+        if ($return) {
+            $this->response(array(
+                                    'code' => 200,
+                                    'message' => "Success"), 200);
+        } else {
+            $this->response(array(
+                                    'code' => 200,
+                                    'message' => "Failed"), 200);
+        }
+        
+    }
+
+
+    function getUsers_post()
+    {
+        $userId = $this->input->post('user_id');
+        $user = $this->users_model->checkUserId($userId);
+
+        echo $user;
+
+        /*
+        $message = array(
+                            'id' => $this->get('id'), 
+                            'name' => $this->post('name'), 
+                            'email' => $this->post('email'), 
+                            'message' => 'ADDED!');
+
+        $this->getFeedsToArray($user);
+        $this->response($this->getFeedsToArray($user),200);
+        */
+        $this->response($user, 200); // 200 being the HTTP response code
+         
+    }
     
     function user_get()
     {
