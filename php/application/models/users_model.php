@@ -11,7 +11,7 @@ class Users_Model extends CI_Model {
         //$ip_address = $this->_prepare_ip($this->input->ip_address());
 
         $user_insert = array(
-            "username" => strtolower($additional_data['first_name']).strtolower($additional_data['last_name']),
+            "username" => strtolower($additional_data['first_name']) . strtolower($additional_data['last_name']),
             "password" => md5($password),
             "email" => $email,
             "ip_address" => $this->_prepare_ip($additional_data['ip_address']),
@@ -41,7 +41,12 @@ class Users_Model extends CI_Model {
                     "user_id" => $user_id,
                     "group_id" => $group);
 
-                $query = $this->db->insert('users_groups', $insert);
+                $this->db->insert('users_groups', $insert);
+                $location_insert = array('current_latitude' => $additional_data['current_latitude'],
+                                        'current_longitude' => $additional_data['current_longitude'],
+                                        'driver_state' => $additional_data['driver_state'],
+                                        'available_state' => $additional_data['available_state']);
+                $this->insertLocation($user_id, $location_insert);
                 return $user_id;
             } else {
                 return -3;
@@ -134,6 +139,69 @@ class Users_Model extends CI_Model {
 
         $query = $this->db->where('id', $id)
                 ->update('users', $updateData);
+
+        if ($query) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function getUser($id) {
+        $query = $this->db->select('id,username,email,first_name,last_name,last_login,company,phone,active')->where('email', $email)
+                ->where('password', $password)
+                ->limit(1)
+                ->order_by('id', 'desc')
+                ->get('users');
+        if ($query->num_rows() === 1) {
+            $updateData = array('last_login' => time(),
+                'active' => 1);
+
+            $user = $query->row();
+
+            $this->db->where('id', $user->id);
+            $this->db->update('users', $updateData);
+
+            return $user;
+        } else {
+            //There is no user, or password not matched
+            return NULL;
+        }
+    }
+
+    public function updateUser($user_id, $user_data) {
+
+        $query = $this ->db ->where('id', $user_id)
+                            ->update('user', $user_data);
+
+        if ($query) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function insertLocation($user_id, $location_data) {
+        $insert = array(
+            "user_id" => $user_id,
+            "current_latitude" => $location_data['current_latitude'],
+            "current_longitude" => $location_data['current_longitude'],
+            "driver_state" => $location_data['driver_state'],
+            "available_state" => $location_data['available_state']);
+
+        $query = $this->db->insert('locations', $insert);
+
+        if ($query) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function updateLocation($user_id, $location_data) {
+        
+        $query = $this ->db ->where('id', $user_id)
+                            ->update('locations', $location_data);
 
         if ($query) {
             return TRUE;

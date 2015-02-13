@@ -53,7 +53,6 @@ $db['default']['port']     = getenv('OPENSHIFT_MYSQL_DB_PORT');
 $db['default']['username'] = getenv('OPENSHIFT_MYSQL_DB_USERNAME');
 $db['default']['password'] = getenv('OPENSHIFT_MYSQL_DB_PASSWORD');
 $db['default']['database'] = getenv('OPENSHIFT_APP_NAME');
-
 /*
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';

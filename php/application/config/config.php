@@ -19,6 +19,7 @@ if (!defined('BASEPATH'))
  */
 /**/
 $config['base_url']	= 'http://php-erdkse.rhcloud.com/';
+
 /*
 $config['base_url'] = 'http://127.0.0.1/php/php/index.php/api/';
 */

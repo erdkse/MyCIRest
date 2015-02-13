@@ -34,7 +34,11 @@ class Example extends REST_Controller {
             'last_name' => $this->input->post('last_name'),
             'company' => $this->input->post('company'),
             'phone' => $this->input->post('phone'),
-            'ip_address' => $this->input->ip_address()
+            'ip_address' => $_SERVER['REMOTE_ADDR'],
+            'current_latitude' => $this->input->post('current_latitude'),
+            'current_longitude' => $this->input->post('current_longitude'),
+            'driver_state' => $this->input->post('driver_state'),
+            'available_state' => $this->input->post('available_state')
         );
 
         // 1 for passengers
@@ -47,32 +51,35 @@ class Example extends REST_Controller {
         // id : SUCCESS!
 
         $return = $this->users_model->registerUser($password, $email, $additional_data, $group);
-
+        $user = (object) array('id' => $return);
+        $response = (object) array('user' => $user);
         /**/
         if ($return > 0) {
             $this->response(array('code' => 200,
                 'status' => true,
                 'message' => "Succes",
-                'response' => $return), 200);
+                'response' => $response), 200);
         } else {
             switch ($return) {
+                
                 case -1:
+                    //$user = (object) array('foo' => 'bar', 'property' => 'value');
                     $this->response(array('code' => 201,
                         'status' => false,
                         'message' => "account_creation_duplicate_email",
-                        'response' => $return), 200);
+                        'response' => $response), 200);
                     break;
                 case -2:
                     $this->response(array('code' => 202,
                         'status' => false,
                         'message' => "account_creation_duplicate_username",
-                        'response' => $return), 200);
+                        'response' => $response), 200);
                     break;
                 case -3:
                     $this->response(array('code' => 205,
                         'status' => false,
                         'message' => "Unknown reason",
-                        'response' => $return), 200);
+                        'response' => $response), 200);
                     break;
             }
         }
@@ -83,37 +90,59 @@ class Example extends REST_Controller {
         $password = $this->input->post('password');
 
         $query = $this->users_model->loginUser($email, $password);
-
+        $response = (object) array('user' => $query);
         if ($query) {
             $this->response(array('code' => 200,
                                     'status' => TRUE,
                                     'message' => "login is successed",
-                                    'user' => $query), 200);
+                                    'response' => $response), 200);
         } else {
             $this->response(array('code' => 201,
                                     'status' => FALSE,
                                     'message' => "login is failed",
-                                    'user' => $query), 200);
+                                    'response' => $response), 200);
         }
     }
 
     function logoutUser_post() {
         $id = $this->input->post('id');
         $query = $this->users_model->logoutUser($id);
-
+        //$response = (object) array();
         if ($query) {
             $this->response(array('code' => 200,
                                     'status' => TRUE,
-                                    'message' => "logout is successed"), 200);
+                                    'message' => "logout is successed",
+                                    'response' => NULL), 200);
         } else {
             $this->response(array('code' => 201,
                                     'status' => FALSE,
-                                    'message' => "logout is failed"), 200);
+                                    'message' => "logout is failed",
+                                    'response' => NULL), 200);
         }
     }
     
-    
-
+    function updateUserLocation_post() {
+        $id = $this->input->post('id');
+        $locationData = array(
+            'current_latitude' => $this->input->post('current_latitude'),
+            'current_longitude' => $this->input->post('current_longitude'),
+            'driver_state' => $this->input->post('driver_state'),
+            'available_state' => $this->input->post('available_state'));
+        
+        $query = $this->users_model->updateLocation($id,$locationData);
+        
+        if ($query) {
+            $this->response(array('code' => 200,
+                                    'status' => TRUE,
+                                    'message' => "User location is updated",
+                                    'response' => NULL), 200);
+        } else {
+            $this->response(array('code' => 201,
+                                    'status' => FALSE,
+                                    'message' => "User location is failed",
+                                    'response' => NULL), 200);
+        }
+    }
 }
 
 ?>
